@@ -52,3 +52,14 @@ jobs:
     - name: Build Docker image
       run: docker build -t loan-api .
 
+    # -------------------------------
+    # NEW STEPS FOR GHCR (IMPORTANT)
+    # -------------------------------
+    - name: Log in to GitHub Container Registry
+      run: echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
+
+    - name: Tag Docker Image
+      run: docker tag loan-api ghcr.io/${{ secrets.GHCR_USERNAME }}/loan-api:latest
+
+    - name: Push to GHCR
+      run: docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/loan-api:latest
