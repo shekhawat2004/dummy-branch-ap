@@ -1,0 +1,17 @@
+services:
+  api:
+    environment:
+      - FLASK_ENV=staging
+      - LOG_LEVEL=info
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: "512M"
+  db:
+    environment:
+      POSTGRES_DB: loans_staging
+    deploy:
+      resources:
+        limits:
+          memory: 1G

@@ -1,0 +1,20 @@
+services:
+  api:
+    environment:
+      - FLASK_ENV=production
+      - LOG_LEVEL=warning
+    deploy:
+      resources:
+        limits:
+          cpus: "1.00"
+          memory: "1G"
+
+  db:
+    environment:
+      POSTGRES_DB: loans_prod
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    deploy:
+      resources:
+        limits:
+          memory: 2G
