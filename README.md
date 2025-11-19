@@ -196,8 +196,9 @@ Package name: **loan-api**
   "avg_amount": 24980
 }
 ```
-📡 Monitoring (Prometheus + Grafana)
-
+12 .📡 Monitoring (Prometheus + Grafana)
+```
+```
 This project includes lightweight monitoring setup using Prometheus & Grafana:
 
 Prometheus scrapes metrics from /metrics
@@ -207,12 +208,12 @@ Grafana visualizes API performance
 Metrics exposed with prometheus-client
 
 Run monitoring stack:
-
+```
 docker compose -f docker-compose.yml \
   -f docker-compose.prod.yml \
   -f docker-compose.metrics.yml up -d
 
-
+```
 Access:
 
 Prometheus → http://localhost:9090
@@ -221,17 +222,16 @@ Grafana → http://localhost:3000
 
 Metrics → http://localhost:5000/metrics
 ---
-
-# 🧑‍💻 12. Developer Info
-
+```
+🧑‍💻 13. Developer Info
+```
 **Author:** Aryan Singh (shekhawat2004)  
 **Role:** DevOps Engineer  
 **Assignment:** Branch Loan API
 
 ---
-
-# 🎉 13. Conclusion
-
+# 🎉 14. Conclusion
+```
 This complete project demonstrates:
 
 ✔ Docker & containerization  
