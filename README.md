@@ -116,10 +116,35 @@ docker compose -f docker-compose.yml -f docker-compose.staging.yml up -d
 ```bash
 docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 ```
-
+🌐 7. HTTPS + NGINX Reverse Proxy
+Add to Windows HOSTS File
+```bash
+127.0.0.1 branchloans.com
+127.0.0.1 www.branchloans.com
+```
+Generate Self-Signed SSL Certificates
+```
+openssl req -x509 -nodes -newkey rsa:2048 -days 365 \
+  -keyout branchloans.key -out branchloans.crt \
+  -subj "/CN=branchloans.com/O=local"
+```
+Start Production + NGINX
+```
+docker compose \
+  -f docker-compose.yml \
+  -f docker-compose.prod.yml \
+  -f docker-compose.nginx.yml up -d
+```
+Access API Securely
+```
+https://branchloans.com
+https://branchloans.com/api/health
+https://branchloans.com/api/loans
+https://branchloans.com/api/stats
+```
 ---
 
-## 🧪 7. API Endpoints
+## 🧪 8. API Endpoints
 
 | Method | Endpoint        | Description             |
 |--------|------------------|-------------------------|
@@ -130,7 +155,7 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 
 ---
 
-## ⚙️ 8. CI/CD Pipeline (GitHub Actions)
+## ⚙️ 9. CI/CD Pipeline (GitHub Actions)
 
 📌 Workflow file: `.github/workflows/ci.yml`
 
@@ -150,7 +175,7 @@ This GHCR image is used in **staging** & **production**.
 
 ---
 
-## 🏗️ 9. GHCR Docker Image
+## 🏗️ 10. GHCR Docker Image
 
 Published at:
 
@@ -160,7 +185,7 @@ Package Name → **loan-api**
 
 ---
 
-## 🧱 10. Docker Compose – All Environments
+## 🧱 11. Docker Compose – All Environments
 
 ### **Production**
 - `FLASK_ENV=production`  
@@ -178,7 +203,7 @@ Package Name → **loan-api**
 
 ---
 
-## 📊 11. Sample API Output (After DB Seed)
+## 📊 12. Sample API Output (After DB Seed)
 
 ### `/api/loans`
 ```json
@@ -204,7 +229,7 @@ Package Name → **loan-api**
 
 ---
 
-## 📡 12. Monitoring (Prometheus + Grafana)
+## 📡 13. Monitoring (Prometheus + Grafana)
 
 This project includes lightweight monitoring setup:
 
@@ -226,7 +251,7 @@ docker compose -f docker-compose.yml \
 
 ---
 
-## 🧑‍💻 13. Developer Info
+## 🧑‍💻 14. Developer Info
 
 **Author:** Aryan Singh (shekhawat2004)  
 **Role:** DevOps Engineer  
@@ -234,7 +259,7 @@ docker compose -f docker-compose.yml \
 
 ---
 
-# 🎉 14. Conclusion
+# 🎉 15. Conclusion
 
 This project demonstrates:
 
