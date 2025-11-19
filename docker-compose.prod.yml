@@ -1,8 +1,14 @@
 services:
   api:
+    image: ghcr.io/shekhawat2004/loan-api:latest
+    ports:
+      - "5000:5000"
     environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/loans_prod
       - FLASK_ENV=production
       - LOG_LEVEL=warning
+    depends_on:
+      - db
     deploy:
       resources:
         limits:

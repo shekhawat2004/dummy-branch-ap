@@ -1,13 +1,20 @@
 services:
   api:
+    image: ghcr.io/shekhawat2004/loan-api:latest
+    ports:
+      - "5000:5000"
     environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/loans_staging
       - FLASK_ENV=staging
       - LOG_LEVEL=info
+    depends_on:
+      - db
     deploy:
       resources:
         limits:
           cpus: "0.50"
           memory: "512M"
+
   db:
     environment:
       POSTGRES_DB: loans_staging
