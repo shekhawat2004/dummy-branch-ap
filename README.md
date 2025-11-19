@@ -14,16 +14,16 @@ This project implements a microloan service with:
 - Environment-specific Docker Compose (Dev/Staging/Prod)  
 - CI/CD pipeline that builds & pushes Docker images to **GitHub Container Registry (GHCR)**  
 
-This project is designed as per Branch International’s DevOps take-home assignment.
+This project is designed as per **Branch International’s DevOps Take-Home Assignment**.
 
 ---
 
-# 📁 2. Project Structure
+## 📁 2. Project Structure
 
 ```
-dummy-branch-ap/
+dummy-branch-app/
 │── app/
-│    ├── routes/ (health, loans, stats)
+│    ├── routes/ (health, loans, stats, metrics)
 │    ├── models.py
 │    ├── schemas.py
 │    ├── db.py
@@ -37,19 +37,26 @@ dummy-branch-ap/
 │── docker-compose.dev.yml
 │── docker-compose.staging.yml
 │── docker-compose.prod.yml
+│── docker-compose.metrics.yml
+│── prometheus.yml
 │── Dockerfile
 │── requirements.txt
+│── nginx/
+│      └── nginx.conf
+│── certs/
+│      ├── branchloans.crt
+│      └── branchloans.key
 │── README.md
 ```
 
 ---
 
-# 🐳 3. Running Locally (Without Docker)
+## 🐳 3. Running Locally (Without Docker)
 
 ### **Create virtual environment**
 ```bash
 python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+source venv/bin/activate     # Windows → venv\Scripts\activate
 ```
 
 ### **Install dependencies**
@@ -57,12 +64,12 @@ source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### **Run DB Migrations**
+### **Run DB migrations**
 ```bash
 alembic upgrade head
 ```
 
-### **Start Server**
+### **Start the server**
 ```bash
 export FLASK_APP=wsgi.py
 flask run
@@ -70,9 +77,9 @@ flask run
 
 ---
 
-# 🐳 4. Running with Docker (Development)
+## 🐳 4. Running with Docker (Development)
 
-### **Command**
+### **Start Dev Environment**
 ```bash
 docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 ```
@@ -82,9 +89,9 @@ docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 
 ---
 
-# 🗄️ 5. Database Seeding
+## 🗄️ 5. Database Seeding
 
-Inside the running API container:
+Run inside API container:
 
 ```bash
 docker exec -it loan_api bash
@@ -93,38 +100,39 @@ python -m scripts.seed
 
 ---
 
-# 🔥 6. Environment-Specific Deployments
+## 🔥 6. Environment-Specific Deployments
 
 ### **DEV**
-```
+```bash
 docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
 
 ### **STAGING**
-```
+```bash
 docker compose -f docker-compose.yml -f docker-compose.staging.yml up -d
 ```
 
 ### **PRODUCTION**
-```
+```bash
 docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 ```
 
 ---
 
-# 🧪 7. API Endpoints
+## 🧪 7. API Endpoints
 
-| Method | Endpoint           | Description             |
-|--------|---------------------|-------------------------|
-| GET    | `/health`           | Service health check    |
-| GET    | `/api/loans`        | List all loans          |
-| GET    | `/api/stats`        | Loan statistics summary |
+| Method | Endpoint        | Description             |
+|--------|------------------|-------------------------|
+| GET    | `/health`        | Service health check    |
+| GET    | `/api/loans`     | List all loans          |
+| GET    | `/api/stats`     | Loan statistics summary |
+| GET    | `/metrics`       | Prometheus metrics      |
 
 ---
 
-# ⚙️ 8. CI/CD Pipeline (GitHub Actions)
+## ⚙️ 8. CI/CD Pipeline (GitHub Actions)
 
-📌 Workflow File: `.github/workflows/ci.yml`
+📌 Workflow file: `.github/workflows/ci.yml`
 
 CI pipeline performs:
 
@@ -133,53 +141,50 @@ CI pipeline performs:
 ✔ Run Alembic migrations  
 ✔ Build Docker image  
 ✔ Log in to GHCR  
-✔ Push Docker image:  
+✔ Push image →  
 ```
 ghcr.io/shekhawat2004/loan-api:latest
 ```
 
-This image is used in **staging** and **production** Docker Compose files.
+This GHCR image is used in **staging** & **production**.
 
 ---
 
-# 🏗️ 9. GHCR Docker Image
+## 🏗️ 9. GHCR Docker Image
 
-View the published image:
+Published at:
 
 🔗 https://github.com/shekhawat2004?tab=packages
 
-Package name: **loan-api**
+Package Name → **loan-api**
 
 ---
 
-# 🧱 10. Docker Compose – All Environments
+## 🧱 10. Docker Compose – All Environments
 
 ### **Production**
-`docker-compose.prod.yml`
-- FLASK_ENV=production  
-- POSTGRES_DB=loans_prod  
-- Resource limits  
-- Uses GHCR image
+- `FLASK_ENV=production`  
+- `POSTGRES_DB=loans_prod`  
+- Resource limits applied  
+- Uses GHCR image  
 
 ### **Staging**
-`docker-compose.staging.yml`
-- FLASK_ENV=staging  
-- POSTGRES_DB=loans_staging  
+- `FLASK_ENV=staging`  
+- `POSTGRES_DB=loans_staging`  
 
 ### **Development**
-`docker-compose.dev.yml`
-- Uses local build  
-- Debugging enabled  
+- Local build  
+- Debug enabled  
 
 ---
 
-# 📊 11. Sample API Output (After DB Seed)
+## 📊 11. Sample API Output (After DB Seed)
 
 ### `/api/loans`
 ```json
 [
   {
-    "id": "...001",
+    "id": "loan_001",
     "borrower_id": "usr_kenya_001",
     "amount": "12500.00",
     "currency": "KES",
@@ -196,50 +201,49 @@ Package name: **loan-api**
   "avg_amount": 24980
 }
 ```
-12 .📡 Monitoring (Prometheus + Grafana)
-```
-```
-This project includes lightweight monitoring setup using Prometheus & Grafana:
 
-Prometheus scrapes metrics from /metrics
+---
 
-Grafana visualizes API performance
+## 📡 12. Monitoring (Prometheus + Grafana)
 
-Metrics exposed with prometheus-client
+This project includes lightweight monitoring setup:
 
-Run monitoring stack:
-```
+✔ `/metrics` endpoint using `prometheus-client`  
+✔ Prometheus scrapes API metrics  
+✔ Grafana dashboards for visualization  
+
+### **Run monitoring stack**
+```bash
 docker compose -f docker-compose.yml \
   -f docker-compose.prod.yml \
   -f docker-compose.metrics.yml up -d
-
 ```
-Access:
 
-Prometheus → http://localhost:9090
+### **Access:**
+- Prometheus → http://localhost:9090  
+- Grafana → http://localhost:3000  
+- Metrics → http://localhost:5000/metrics  
 
-Grafana → http://localhost:3000
-
-Metrics → http://localhost:5000/metrics
 ---
-```
-🧑‍💻 13. Developer Info
-```
+
+## 🧑‍💻 13. Developer Info
+
 **Author:** Aryan Singh (shekhawat2004)  
 **Role:** DevOps Engineer  
-**Assignment:** Branch Loan API
+**Assignment:** Branch Loan API – Take-Home Project  
 
 ---
+
 # 🎉 14. Conclusion
-```
-This complete project demonstrates:
+
+This project demonstrates:
 
 ✔ Docker & containerization  
 ✔ PostgreSQL + Alembic migrations  
 ✔ Multi-environment deployment  
-✔ CI/CD automation  
-✔ GitHub Container Registry (GHCR) integration  
-✔ Clean REST API implementation  
+✔ CI/CD automation (GitHub Actions)  
+✔ GHCR image publishing  
+✔ Monitoring (Prometheus + Grafana)  
+✔ Clean REST API design  
 
 This fulfills **100% of the Branch DevOps Take-Home Assignment requirements**.
-
