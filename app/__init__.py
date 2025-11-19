@@ -10,6 +10,8 @@ def create_app() -> Flask:
     from .routes.health import bp as health_bp
     from .routes.loans import bp as loans_bp
     from .routes.stats import bp as stats_bp
+    from app.routes.metrics import metrics_bp
+    app.register_blueprint(metrics_bp)
 
     app.register_blueprint(health_bp)
     app.register_blueprint(loans_bp, url_prefix="/api")
